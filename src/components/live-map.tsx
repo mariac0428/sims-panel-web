@@ -193,14 +193,43 @@ export function LiveMap({ onShiftClosed }: { onShiftClosed?: () => void }) {
 
 function parseGeomToLatLng(geom: any): { latitude: number; longitude: number } | null {
   if (!geom) return null;
+
   if (typeof geom === 'object' && geom.coordinates) {
     return { longitude: geom.coordinates[0], latitude: geom.coordinates[1] };
   }
+
   if (typeof geom === 'string') {
-    const match = geom.match(/POINT\(([-\d.]+) ([-\d.]+)\)/);
-    if (match) {
-      return { longitude: parseFloat(match[1]), latitude: parseFloat(match[2]) };
+    const wktMatch = geom.match(/POINT\(([-\d.]+) ([-\d.]+)\)/);
+    if (wktMatch) {
+      return { longitude: parseFloat(wktMatch[1]), latitude: parseFloat(wktMatch[2]) };
+    }
+
+    if (/^[0-9A-Fa-f]+$/.test(geom) && geom.length >= 42) {
+      try {
+        const hexCoords = geom.slice(-32);
+        const lonHex = hexCoords.slice(0, 16);
+        const latHex = hexCoords.slice(16, 32);
+
+        const longitude = hexToDoubleLE(lonHex);
+        const latitude = hexToDoubleLE(latHex);
+
+        if (!isNaN(longitude) && !isNaN(latitude)) {
+          return { latitude, longitude };
+        }
+      } catch {
+        return null;
+      }
     }
   }
+
   return null;
+}
+
+function hexToDoubleLE(hex: string): number {
+  const bytes = new Uint8Array(8);
+  for (let i = 0; i < 8; i++) {
+    bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  }
+  const view = new DataView(bytes.buffer);
+  return view.getFloat64(0, true);
 }
