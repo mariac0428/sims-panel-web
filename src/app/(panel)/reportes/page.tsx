@@ -19,7 +19,6 @@ type Technician = {
 };
 
 type WeeklyReport = {
-  id: string;
   week_start: string;
   week_end: string;
   normal_hours: number;
@@ -31,6 +30,13 @@ type WeeklyReport = {
   night_pay: number;
   sunday_holiday_pay: number;
   total_pay: number;
+};
+
+type DayStatus = {
+  date: string;
+  dayLabel: string;
+  hoursWorked: number;
+  status: 'green' | 'red' | 'gray' | 'none';
 };
 
 function getMonday(date: Date): Date {
@@ -57,8 +63,12 @@ export default function ReportesPage() {
   const [selectedTechId, setSelectedTechId] = useState<string>('');
   const [selectedMonday, setSelectedMonday] = useState<Date>(getMonday(new Date()));
   const [report, setReport] = useState<WeeklyReport | null>(null);
+  const [dayStatuses, setDayStatuses] = useState<DayStatus[]>([]);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
+
+  const weekEnd = new Date(selectedMonday);
+  weekEnd.setDate(weekEnd.getDate() + 6);
 
   useEffect(() => {
     loadTechnicians();
@@ -67,6 +77,7 @@ export default function ReportesPage() {
   useEffect(() => {
     if (selectedTechId) {
       loadReport();
+      loadDayStatuses();
     }
   }, [selectedTechId, selectedMonday]);
 
@@ -99,6 +110,60 @@ export default function ReportesPage() {
     setLoading(false);
   }
 
+  async function loadDayStatuses() {
+    const supabase = createClient();
+    const weekStartStr = formatDate(selectedMonday);
+    const weekEndStr = formatDate(weekEnd);
+
+    const { data: settingsData } = await supabase
+      .from('company_settings')
+      .select('standard_daily_hours')
+      .limit(1)
+      .single();
+
+    const standardHours = Number(settingsData?.standard_daily_hours ?? 7);
+
+    const { data: shiftsData } = await supabase
+      .from('shifts')
+      .select('shift_date, start_time, end_time')
+      .eq('technician_id', selectedTechId)
+      .gte('shift_date', weekStartStr)
+      .lte('shift_date', weekEndStr);
+
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const statuses: DayStatus[] = [];
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(selectedMonday);
+      d.setDate(d.getDate() + i);
+      const dStr = formatDate(d);
+
+      const shift = (shiftsData ?? []).find((s) => s.shift_date === dStr);
+
+      if (!shift || !shift.end_time) {
+        statuses.push({
+          date: dStr,
+          dayLabel: dayNames[d.getDay()],
+          hoursWorked: 0,
+          status: 'none',
+        });
+        continue;
+      }
+
+      const hours =
+        (new Date(shift.end_time).getTime() - new Date(shift.start_time).getTime()) /
+        (1000 * 60 * 60);
+
+      let status: DayStatus['status'] = 'gray';
+      if (hours > standardHours + 0.1) status = 'green';
+      else if (hours < standardHours - 0.1) status = 'red';
+
+      statuses.push({ date: dStr, dayLabel: dayNames[d.getDay()], hoursWorked: hours, status });
+    }
+
+    setDayStatuses(statuses);
+  }
+
   async function handleGenerateReport() {
     setGenerating(true);
     const supabase = createClient();
@@ -119,7 +184,7 @@ export default function ReportesPage() {
     setSelectedMonday(newMonday);
   }
 
-    function handleExportExcel() {
+  function handleExportExcel() {
     if (!report) return;
     const techName = technicians.find((t) => t.id === selectedTechId)?.full_name ?? 'tecnico';
     exportReportToExcel(report, techName);
@@ -130,9 +195,6 @@ export default function ReportesPage() {
     const techName = technicians.find((t) => t.id === selectedTechId)?.full_name ?? 'tecnico';
     exportReportToPDF(report, techName);
   }
-
-  const weekEnd = new Date(selectedMonday);
-  weekEnd.setDate(weekEnd.getDate() + 6);
 
   return (
     <div className="p-8">
@@ -172,6 +234,35 @@ export default function ReportesPage() {
           {generating ? 'Calculando...' : 'Generar / Actualizar reporte'}
         </Button>
       </div>
+
+      {dayStatuses.length > 0 && (
+        <div className="mt-6 flex gap-3 rounded-lg border border-neutral-800 bg-neutral-900 p-4">
+          {dayStatuses.map((day) => (
+            <div key={day.date} className="flex flex-col items-center gap-1">
+              <span className="text-xs text-neutral-400">{day.dayLabel}</span>
+              <div
+                                className={`h-6 w-6 rounded-full border-2 ${
+                  day.status === 'green'
+                    ? 'border-green-500 bg-green-500'
+                    : day.status === 'red'
+                      ? 'border-red-500 bg-red-500'
+                      : day.status === 'gray'
+                        ? 'border-neutral-400 bg-neutral-400'
+                        : 'border-neutral-700 bg-transparent'
+                }`}
+                title={
+                  day.status === 'none'
+                    ? 'Sin jornada'
+                    : `${day.hoursWorked.toFixed(1)} horas trabajadas`
+                }
+              />
+              <span className="text-xs text-neutral-500">
+                {day.status === 'none' ? '—' : `${day.hoursWorked.toFixed(1)}h`}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="mt-6">
         {loading ? (
@@ -216,15 +307,15 @@ export default function ReportesPage() {
               <p className="text-sm text-green-400">Total a pagar esta semana</p>
               <p className="mt-1 text-3xl font-bold text-white">
                 {formatCOP(Number(report.total_pay))}
-                            <div className="col-span-2 flex gap-3 md:col-span-4">
+              </p>
+            </div>
+            <div className="col-span-2 flex gap-3 md:col-span-4">
               <Button variant="outline" className="text-black" onClick={handleExportExcel}>
                 Exportar Excel
               </Button>
               <Button variant="outline" className="text-black" onClick={handleExportPDF}>
                 Exportar PDF
               </Button>
-            </div>
-              </p>
             </div>
           </div>
         )}
