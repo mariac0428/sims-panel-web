@@ -98,8 +98,8 @@ export function LiveMap({ onShiftClosed }: { onShiftClosed?: () => void }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 p-3">
-        <span className="text-sm text-neutral-400">Ver:</span>
+      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-card p-3">
+        <span className="text-sm text-muted-foreground">Ver:</span>
         <button
           className={`rounded px-2 py-1 text-sm ${
             visibleIds === null ? 'bg-white text-black' : 'text-neutral-300'
@@ -131,7 +131,7 @@ export function LiveMap({ onShiftClosed }: { onShiftClosed?: () => void }) {
         ))}
       </div>
 
-      <div className="h-[500px] w-full overflow-hidden rounded-lg border border-neutral-800">
+      <div className="h-[500px] w-full overflow-hidden rounded-lg border border-border">
         <Map
           {...viewState}
           onMove={(evt) => setViewState(evt.viewState)}
@@ -183,7 +183,7 @@ export function LiveMap({ onShiftClosed }: { onShiftClosed?: () => void }) {
       </div>
 
       {technicians.length === 0 && (
-        <p className="text-center text-sm text-neutral-500">
+        <p className="text-center text-sm text-muted-foreground">
           No hay técnicos con jornada activa en este momento.
         </p>
       )}

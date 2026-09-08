@@ -1,9 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, MapPin, Users, Route, FileBarChart, LogOut, Menu } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import {
+  LayoutDashboard,
+  MapPin,
+  Users,
+  Route,
+  FileBarChart,
+  LogOut,
+  Menu,
+  Sun,
+  Moon,
+} from 'lucide-react';
 
 import { createClient } from '@/lib/supabase/client';
 
@@ -17,8 +29,14 @@ const navItems = [
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   async function handleLogout() {
     const supabase = createClient();
@@ -27,17 +45,22 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="flex min-h-screen bg-neutral-950">
+    <div className="flex min-h-screen bg-background">
       <aside
-        className={`flex flex-col border-r border-neutral-800 bg-neutral-900 transition-all ${
+        className={`flex flex-col border-r border-sidebar-border bg-sidebar transition-all ${
           collapsed ? 'w-16' : 'w-64'
         }`}
       >
         <div className="flex items-center justify-between p-4">
-          {!collapsed && <span className="text-lg font-bold text-white">SIMS</span>}
+          {!collapsed && (
+            <div className="flex items-center gap-2">
+              <Image src="/logo-sims.png" alt="SIMS" width={28} height={28} />
+              <span className="text-lg font-bold text-sidebar-foreground">SIMS</span>
+            </div>
+          )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="rounded p-1 text-neutral-400 hover:bg-neutral-800 hover:text-white"
+            className="rounded p-1 text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
             <Menu size={20} />
           </button>
@@ -53,8 +76,8 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? 'bg-neutral-800 text-white'
-                    : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium'
+                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                 }`}
               >
                 <Icon size={20} />
@@ -64,10 +87,19 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="border-t border-neutral-800 p-2">
+        <div className="space-y-1 border-t border-sidebar-border p-2">
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+          >
+            {mounted && (theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />)}
+            {!collapsed && mounted && (
+              <span>{theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}</span>
+            )}
+          </button>
           <button
             onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-400 hover:bg-neutral-800 hover:text-white"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
             <LogOut size={20} />
             {!collapsed && <span>Cerrar sesión</span>}

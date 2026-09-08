@@ -60,34 +60,34 @@ export default function PuntosDeInteresPage() {
     <div className="p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Puntos de interés</h1>
-          <p className="text-neutral-500">Restaurantes clientes y tiendas proveedoras</p>
+          <h1 className="text-2xl font-bold text-foreground">Puntos de interés</h1>
+          <p className="text-muted-foreground">Restaurantes clientes y tiendas proveedoras</p>
         </div>
         <Button onClick={handleAddNew}>Agregar punto</Button>
       </div>
 
-      <div className="mt-6 rounded-lg border border-neutral-800 text-white">
+      <div className="mt-6 rounded-lg border border-border text-foreground">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-white">Nombre</TableHead>
-              <TableHead className="text-white">Dirección</TableHead>
-              <TableHead className="text-white">Tipo</TableHead>
-              <TableHead className="text-white">Radio</TableHead>
-              <TableHead className="text-white">Estado</TableHead>
+              <TableHead className="text-foreground">Nombre</TableHead>
+              <TableHead className="text-foreground">Dirección</TableHead>
+              <TableHead className="text-foreground">Tipo</TableHead>
+              <TableHead className="text-foreground">Radio</TableHead>
+              <TableHead className="text-foreground">Estado</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-neutral-500">
+                <TableCell colSpan={6} className="text-center text-muted-foreground">
                   Cargando...
                 </TableCell>
               </TableRow>
             ) : points.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-neutral-500">
+                <TableCell colSpan={6} className="text-center text-muted-foreground">
                   No hay puntos de interés registrados todavía.
                 </TableCell>
               </TableRow>
@@ -95,13 +95,13 @@ export default function PuntosDeInteresPage() {
               points.map((point) => (
                 <TableRow key={point.id}>
                   <TableCell className="font-medium">{point.name}</TableCell>
-                  <TableCell className="text-neutral-400">{point.address ?? '—'}</TableCell>
+                  <TableCell className="text-muted-foreground">{point.address ?? '—'}</TableCell>
                   <TableCell>
                     <Badge variant={point.type === 'cliente' ? 'default' : 'secondary'}>
                       {point.type === 'cliente' ? 'Cliente' : 'Proveedor'}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-neutral-400">{point.radius_meters} m</TableCell>
+                  <TableCell className="text-muted-foreground">{point.radius_meters} m</TableCell>
                   <TableCell>
                     <Badge variant={point.active ? 'default' : 'outline'}>
                       {point.active ? 'Activo' : 'Inactivo'}

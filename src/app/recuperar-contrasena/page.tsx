@@ -67,9 +67,9 @@ export default function RecuperarContrasenaPage() {
             </Button>
 
             
-              href="/login"
+            <a  href="/login"
               className="block text-center text-sm text-neutral-400 hover:text-white"
-            <a>
+            >
               Volver al inicio de sesion
             </a>
           </form>

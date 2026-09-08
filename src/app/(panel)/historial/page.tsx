@@ -120,12 +120,12 @@ export default function HistorialPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold text-white">Historial</h1>
-      <p className="text-neutral-500">Recorrido diario de cada técnico</p>
+      <h1 className="text-2xl font-bold text-foreground">Historial</h1>
+      <p className="text-muted-foreground">Recorrido diario de cada técnico</p>
 
       <div className="mt-6 flex flex-wrap gap-4">
         <Select value={selectedTechId} onValueChange={(v) => setSelectedTechId(v ?? '')}>
-          <SelectTrigger className="w-64 bg-neutral-800 text-white border-neutral-700">
+          <SelectTrigger className="w-64 bg-input text-foreground border-input">
             <SelectValue placeholder="Selecciona un técnico">
               {technicians.find((t) => t.id === selectedTechId)?.full_name ??
                 'Selecciona un técnico'}
@@ -141,7 +141,7 @@ export default function HistorialPage() {
         </Select>
 
         <Popover>
-          <PopoverTrigger className="flex w-64 items-center justify-start rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white">
+          <PopoverTrigger className="flex w-64 items-center justify-start rounded-md border border-input bg-input px-3 py-2 text-sm text-foreground">
             <CalendarIcon className="mr-2 h-4 w-4" />
             {selectedDate.toLocaleDateString('es-CO')}
           </PopoverTrigger>
@@ -157,9 +157,9 @@ export default function HistorialPage() {
 
       <div className="mt-6">
         {loading ? (
-          <p className="text-neutral-500">Cargando recorrido...</p>
+          <p className="text-muted-foreground">Cargando recorrido...</p>
         ) : routePoints.length === 0 ? (
-          <p className="text-neutral-500">
+          <p className="text-muted-foreground">
             No hay recorrido registrado para este técnico en esta fecha.
           </p>
         ) : (
@@ -169,15 +169,15 @@ export default function HistorialPage() {
 
       {visits.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-lg font-semibold text-white">Puntos visitados</h2>
+          <h2 className="text-lg font-semibold text-foreground">Puntos visitados</h2>
           <div className="mt-2 space-y-2">
             {visits.map((v, i) => (
               <div
                 key={i}
-                className="flex justify-between rounded-lg border border-neutral-800 bg-neutral-900 p-3"
+                className="flex justify-between rounded-lg border border-border bg-card p-3"
               >
-                <span className="text-white">{v.name}</span>
-                <span className="text-neutral-400">
+                <span className="text-foreground">{v.name}</span>
+                <span className="text-muted-foreground">
                   {new Date(v.entry_time).toLocaleTimeString('es-CO')} -{' '}
                   {new Date(v.exit_time).toLocaleTimeString('es-CO')} ({v.duration_minutes} min)
                 </span>

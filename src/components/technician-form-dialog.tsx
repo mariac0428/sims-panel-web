@@ -149,7 +149,7 @@ export function TechnicianFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-neutral-900 text-white">
+      <DialogContent className="max-w-md bg-card text-foreground">
         <DialogHeader>
           <DialogTitle>
             {editingTechnician ? 'Editar técnico' : 'Agregar técnico'}
@@ -161,7 +161,7 @@ export function TechnicianFormDialog({
             <Label htmlFor="fullName">Nombre completo</Label>
             <Input
               id="fullName"
-              className="bg-neutral-800 text-white border-neutral-700"
+              className="bg-input text-foreground border-input"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Juan Pérez"
@@ -172,7 +172,7 @@ export function TechnicianFormDialog({
             <Label htmlFor="phone">Teléfono</Label>
             <Input
               id="phone"
-              className="bg-neutral-800 text-white border-neutral-700"
+              className="bg-input text-foreground border-input"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="3001234567"
@@ -185,7 +185,7 @@ export function TechnicianFormDialog({
               <Input
                 id="email"
                 type="email"
-                className="bg-neutral-800 text-white border-neutral-700"
+                className="bg-input text-foreground border-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="juan@sims.com"
@@ -196,7 +196,7 @@ export function TechnicianFormDialog({
           <div className="space-y-2">
             <Label>Rol</Label>
             <Select value={role} onValueChange={(v) => setRole(v as 'tecnico' | 'jefe')}>
-              <SelectTrigger className="bg-neutral-800 text-white border-neutral-700">
+              <SelectTrigger className="bg-input text-foreground border-input">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

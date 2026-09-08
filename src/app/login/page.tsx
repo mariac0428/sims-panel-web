@@ -64,7 +64,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Correo electronico</Label>
+            <Label htmlFor="email" className="text-white">Correo electronico</Label>
             <Input
               id="email"
               type="email"
@@ -72,20 +72,20 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="text-white"
+              className="text-white bg-neutral-900 border-neutral-700 focus-visible:border-amber-400 focus-visible:ring-amber-400"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Contrasena</Label>
-            <Input
+                  <Label htmlFor="password" className="text-white">Contraseña</Label>
+                  <Input
               id="password"
               type="password"
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-               className="text-white"
+              className="text-white bg-neutral-900 border-neutral-700 focus-visible:border-amber-400 focus-visible:ring-amber-400"
             />
           </div>
 
@@ -96,9 +96,9 @@ export default function LoginPage() {
           </Button>
 
           
-            href="/recuperar-contrasena"
+           <a href="/recuperar-contrasena"
             className="block text-center text-sm text-neutral-400 hover:text-white"
-          <a>
+          >
             Olvidaste tu contrasena?
           </a>
         </form>

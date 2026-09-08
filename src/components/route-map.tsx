@@ -34,7 +34,7 @@ export function RouteMap({ points }: RouteMapProps) {
   const centerLng = points.reduce((sum, p) => sum + p.longitude, 0) / points.length;
 
   return (
-    <div className="h-[500px] w-full overflow-hidden rounded-lg border border-neutral-800">
+    <div className="h-[500px] w-full overflow-hidden rounded-lg border border-border">
       <Map
         initialViewState={{
           latitude: centerLat,
@@ -65,7 +65,7 @@ export function RouteMap({ points }: RouteMapProps) {
 
         {last && last !== first && (
           <Marker latitude={last.latitude} longitude={last.longitude}>
-            <div className="rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
+            <div className="rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-foreground">
               Fin
             </div>
           </Marker>

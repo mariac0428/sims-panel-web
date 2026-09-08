@@ -68,33 +68,33 @@ export default function TecnicosPage() {
     <div className="p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Técnicos</h1>
-          <p className="text-neutral-500">Personal con acceso a la app móvil y al panel</p>
+          <h1 className="text-2xl font-bold text-foreground">Técnicos</h1>
+          <p className="text-muted-foreground">Personal con acceso a la app móvil y al panel</p>
         </div>
         <Button onClick={handleAddNew}>Agregar técnico</Button>
       </div>
 
-      <div className="mt-6 rounded-lg border border-neutral-800 text-white">
+      <div className="mt-6 rounded-lg border border-border text-foreground">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-white">Nombre</TableHead>
-              <TableHead className="text-white">Teléfono</TableHead>
-              <TableHead className="text-white">Rol</TableHead>
-              <TableHead className="text-white">Estado</TableHead>
+              <TableHead className="text-foreground">Nombre</TableHead>
+              <TableHead className="text-foreground">Teléfono</TableHead>
+              <TableHead className="text-foreground">Rol</TableHead>
+              <TableHead className="text-foreground">Estado</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-neutral-500">
+                <TableCell colSpan={5} className="text-center text-muted-foreground">
                   Cargando...
                 </TableCell>
               </TableRow>
             ) : technicians.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-neutral-500">
+                <TableCell colSpan={5} className="text-center text-muted-foreground">
                   No hay técnicos registrados todavía.
                 </TableCell>
               </TableRow>
@@ -102,7 +102,7 @@ export default function TecnicosPage() {
               technicians.map((technician) => (
                 <TableRow key={technician.id}>
                   <TableCell className="font-medium">{technician.full_name}</TableCell>
-                  <TableCell className="text-neutral-400">{technician.phone ?? '—'}</TableCell>
+                  <TableCell className="text-muted-foreground">{technician.phone ?? '—'}</TableCell>
                   <TableCell>
                     <Badge variant={technician.role === 'jefe' ? 'default' : 'secondary'}>
                       {technician.role === 'jefe' ? 'Jefe' : 'Técnico'}

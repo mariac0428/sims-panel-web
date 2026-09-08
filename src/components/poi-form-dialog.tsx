@@ -144,7 +144,7 @@ export function PoiFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg bg-neutral-900 text-white">
+      <DialogContent className="max-w-lg bg-card text-foreground">
         <DialogHeader>
           <DialogTitle>
             {editingPoint ? 'Editar punto de interés' : 'Agregar punto de interés'}
@@ -156,7 +156,7 @@ export function PoiFormDialog({
             <Label htmlFor="name">Nombre</Label>
             <Input
               id="name"
-              className="bg-neutral-800 text-white border-neutral-700"
+              className="bg-input text-foreground border-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Restaurante El Buen Sabor"
@@ -167,7 +167,7 @@ export function PoiFormDialog({
             <div className="space-y-2">
               <Label>Tipo</Label>
               <Select value={type} onValueChange={(v) => setType(v as 'cliente' | 'proveedor')}>
-                <SelectTrigger className="bg-neutral-800 text-white border-neutral-700">
+                <SelectTrigger className="bg-input text-foreground border-input">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -182,7 +182,7 @@ export function PoiFormDialog({
               <Input
                 id="radius"
                 type="number"
-                className="bg-neutral-800 text-white border-neutral-700"
+                className="bg-input text-foreground border-input"
                 value={radius}
                 onChange={(e) => setRadius(e.target.value)}
               />
@@ -194,7 +194,7 @@ export function PoiFormDialog({
             <div className="flex gap-2">
               <Input
                 id="address"
-                className="bg-neutral-800 text-white border-neutral-700"
+                className="bg-input text-foreground border-input"
                 value={addressQuery}
                 onChange={(e) => setAddressQuery(e.target.value)}
                 placeholder="Calle 10 #43-12, Medellín"
@@ -203,7 +203,7 @@ export function PoiFormDialog({
                 {searching ? 'Buscando...' : 'Buscar'}
               </Button>
             </div>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-muted-foreground">
               Busca la dirección para centrar el mapa, luego arrastra el pin al punto exacto.
             </p>
           </div>

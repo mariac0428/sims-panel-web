@@ -33,7 +33,7 @@ export function LocationPicker({ latitude, longitude, onChange }: LocationPicker
   );
 
   return (
-    <div className="h-64 w-full overflow-hidden rounded-lg border border-neutral-700">
+    <div className="h-64 w-full overflow-hidden rounded-lg border border-input">
       <Map
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
