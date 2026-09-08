@@ -56,6 +56,15 @@ export default function TecnicosPage() {
   }
 
   async function handleToggleActive(technician: Technician) {
+    const action = technician.active ? 'desactivar' : 'activar';
+    const confirmed = window.confirm(
+      `¿Seguro que quieres ${action} a ${technician.full_name}?${
+        technician.active ? ' No podrá iniciar sesión en la app móvil mientras esté desactivado.' : ''
+      }`
+    );
+
+    if (!confirmed) return;
+
     const supabase = createClient();
     await supabase
       .from('technicians')

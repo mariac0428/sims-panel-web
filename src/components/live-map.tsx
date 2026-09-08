@@ -75,6 +75,12 @@ export function LiveMap({ onShiftClosed }: { onShiftClosed?: () => void }) {
   }, [loadTechnicians]);
 
   async function handleForceClose(technician: LiveTechnician) {
+    const confirmed = window.confirm(
+      `¿Seguro que quieres forzar el cierre de la jornada de ${technician.full_name}? Esta acción no se puede deshacer.`
+    );
+
+    if (!confirmed) return;
+
     setClosing(true);
     const supabase = createClient();
     await supabase
